@@ -15,11 +15,16 @@ content = [x.strip() for x in content]
 content = list(set(content))
 content.sort()
 pattern = re.compile('(([0-9-a-z]*\.?)*) ansible_host=(.*)')
+cli_pattern = '.*.*'
+if len(sys.argv) > 1:
+    cli_pattern = '.*' + sys.argv[1] + '.*'
+
+cli_pattern = re.compile(cli_pattern)
 
 hosts = []
 for line in content:
     x = pattern.match(line)
-    if x:
+    if x and cli_pattern.match(line):
         hosts.append([x.group(1), x.group(3)])
 
 
